@@ -1,5 +1,5 @@
 {
-  "name": "tabltio-webhook",
+  "name": "tablito-webhook",
   "version": "1.0.0",
   "description": "Webhook API for Tablito premium subscriptions",
   "main": "api/webhook.js",
