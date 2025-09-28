@@ -1,19 +1,13 @@
 {
   "name": "tablito-webhook",
   "version": "1.0.0",
-  "description": "Webhook API for Tablito premium subscriptions",
-  "main": "api/webhook.js",
+  "description": "Webhook API for TabSnap premium subscriptions",
   "type": "module",
-  "scripts": {
-    "dev": "vercel dev",
-    "build": "echo 'No build required'",
-    "start": "vercel dev"
+  "engines": {
+    "node": "20.x"
   },
   "dependencies": {
-    "stripe": "^14.0.0",
-    "@supabase/supabase-js": "^2.38.0"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+    "stripe": "^17.0.0",
+    "@supabase/supabase-js": "^2.45.0"
   }
 }
