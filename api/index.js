@@ -22,7 +22,6 @@ export default async function handler(req, res) {
   } else if (Buffer.isBuffer(req.body)) {
     body = req.body;
   } else {
-    // Si c'est un objet, le convertir en string
     body = JSON.stringify(req.body);
   }
 
@@ -39,19 +38,16 @@ export default async function handler(req, res) {
   let event;
 
   try {
-    // Vérifier la signature Stripe
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
     console.log('✅ Signature Stripe vérifiée');
   } catch (err) {
     console.log(`❌ Erreur signature: ${err.message}`);
-    console.log('🔍 Body sample:', typeof body === 'string' ? body.substring(0, 100) : 'Not string');
     return res.status(400).json({ error: 'Invalid signature' });
   }
 
   console.log('📦 Event type:', event.type);
 
   try {
-    // Traiter l'événement
     if (event.type === 'checkout.session.completed') {
       console.log('🛒 Traitement checkout.session.completed');
       await handleCheckoutCompleted(event.data.object);
@@ -68,68 +64,15 @@ export default async function handler(req, res) {
   }
 }
 
-// Gestion checkout complété
 async function handleCheckoutCompleted(session) {
   console.log('🛒 Session:', session.id);
   console.log('👤 Customer:', session.customer);
   console.log('🏷️ Client reference:', session.client_reference_id);
-  console.log('📅 Subscription:', session.subscription);
   
   const customerId = session.customer;
   const clientReferenceId = session.client_reference_id;
   const subscriptionId = session.subscription;
 
-  // Données à sauvegarder
-  const userData = {
-    customer_id: clientReferenceId || customerId,
-    stripe_customer_id: customerId,
-    subscription_id: subscriptionId,
-    status: 'active',
-    updated_at: new Date().toISOString()
-  };
-
-  console.log('💾 Sauvegarde Supabase:', userData);
-
-  try {
-    const { data, error } = await supabase
-      .from('premium_users')
-      .upsert([userData], {
-        onConflict: 'customer_id'
-      });
-
-    if (error) {
-      console.error('❌ Erreur Supabase:', error);
-      throw error;
-    }
-
-    console.log('✅ Utilisateur premium sauvegardé');
-    return data;
-
-  } catch (error) {
-    console.error('❌ Erreur sauvegarde:', error);
-    throw error;
-  }
-}✅ Webhook traité avec succès');
-    return res.json({ received: true, event_type: event.type });
-
-  } catch (error) {
-    console.error('❌ Erreur traitement:', error);
-    return res.status(500).json({ error: 'Erreur traitement webhook' });
-  }
-}
-
-// Gestion checkout complété
-async function handleCheckoutCompleted(session) {
-  console.log('🛒 Session:', session.id);
-  console.log('👤 Customer:', session.customer);
-  console.log('🏷️ Client reference:', session.client_reference_id);
-  console.log('📅 Subscription:', session.subscription);
-  
-  const customerId = session.customer;
-  const clientReferenceId = session.client_reference_id;
-  const subscriptionId = session.subscription;
-
-  // Données à sauvegarder
   const userData = {
     customer_id: clientReferenceId || customerId,
     stripe_customer_id: customerId,
