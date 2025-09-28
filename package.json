@@ -1,1 +1,19 @@
-
+{
+  "name": "tabltio-webhook",
+  "version": "1.0.0",
+  "description": "Webhook API for Tablito premium subscriptions",
+  "main": "api/webhook.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build required'",
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "stripe": "^14.0.0",
+    "@supabase/supabase-js": "^2.38.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
